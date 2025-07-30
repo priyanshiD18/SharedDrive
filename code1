@@ -1,0 +1,186 @@
+auth 
+
+
+
+
+// app/src/main/java/in/gov/uidai/auasample/model/authxml_pojo/AuthRequest.kt
+package in.gov.uidai.auasample.model.authxml_pojo
+
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement
+
+/**
+ * Kotlin data class representing the <Auth> element for Aadhaar Authentication Request.
+ * Mapped using Jackson XML annotations.
+ */
+@JacksonXmlRootElement(localName = "Auth")
+@JsonInclude(JsonInclude.Include.NON_NULL) // Only include non-null fields in the generated XML
+data class AuthRequest(
+    @JacksonXmlProperty(isAttribute = true, localName = "ac")
+    var ac: String? = null, // AUA Code
+
+    @JacksonXmlProperty(isAttribute = true, localName = "ver")
+    var ver: String? = null, // API Version
+
+    @JacksonXmlProperty(isAttribute = true, localName = "txn")
+    var txn: String? = null, // Transaction ID
+
+    @JacksonXmlProperty(isAttribute = true, localName = "tid")
+    var tid: String? = null, // Terminal ID (if applicable, often same as txn for AUA)
+
+    @JacksonXmlProperty(isAttribute = true, localName = "sa")
+    var sa: String? = null, // Sub-AUA Code (if applicable)
+
+    @JacksonXmlProperty(isAttribute = true, localName = "uid")
+    var uid: String? = null, // Aadhaar number (or VID)
+
+    @JacksonXmlProperty(isAttribute = true, localName = "rc")
+    var rc: String? = null, // Resident Consent ("Y" for yes)
+
+    @JacksonXmlProperty(isAttribute = true, localName = "lk")
+    var lk: String? = null, // License Key (ASA license key)
+
+    // Nested Elements
+    @JsonProperty("Uses")
+    var uses: UsesRequest? = null, // Details what factors are used (bio, otp, pi, etc.)
+
+    @JsonProperty("Meta")
+    var meta: MetaRequest? = null, // Device metadata
+
+    @JsonProperty("Hmac")
+    var hmac: String? = null, // HMAC of the decrypted PID block (Base64 encoded)
+
+    @JsonProperty("Data") // Refers to the encrypted PID block
+    var data: DataRequest? = null,
+
+    @JsonProperty("Skey") // Refers to the encrypted session key
+    var skey: SkeyRequest? = null
+)
+
+
+
+
+
+
+uses
+
+
+// app/src/main/java/in/gov/uidai/auasample/model/authxml_pojo/UsesRequest.kt
+package in.gov.uidai.auasample.model.authxml_pojo
+
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement
+
+/**
+ * Kotlin data class representing the <Uses> element in Aadhaar Authentication Request.
+ * Defines which authentication factors are being used.
+ */
+@JacksonXmlRootElement(localName = "Uses")
+@JsonInclude(JsonInclude.Include.NON_NULL) // Only include non-null attributes in the generated XML
+data class UsesRequest(
+    @JacksonXmlProperty(isAttribute = true, localName = "pa")
+    var pa: String? = null, // Personal Address (Demographic)
+
+    @JacksonXmlProperty(isAttribute = true, localName = "bt")
+    var bt: String? = null, // Biometric Type (e.g., "FMR", "FIR", "IIR", "FID")
+
+    @JacksonXmlProperty(isAttribute = true, localName = "pin")
+    var pin: String? = null, // PIN (less common for direct API, often for resident-facing apps)
+
+    @JacksonXmlProperty(isAttribute = true, localName = "pi")
+    var pi: String? = null, // Personal Identity (Demographic)
+
+    @JacksonXmlProperty(isAttribute = true, localName = "bio")
+    var bio: String? = null, // Biometric
+
+    @JacksonXmlProperty(isAttribute = true, localName = "pfa")
+    var pfa: String? = null, // Personal Full Address (Demographic)
+
+    @JacksonXmlProperty(isAttribute = true, localName = "otp")
+    var otp: String? = null // One Time Password
+)
+
+
+
+meta 
+
+
+// app/src/main/java/in/gov/uidai/auasample/model/authxml_pojo/MetaRequest.kt
+package in.gov.uidai.auasample.model.authxml_pojo
+
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement
+
+/**
+ * Kotlin data class representing the <Meta> element in Aadhaar Authentication Request.
+ * Contains device metadata.
+ */
+@JacksonXmlRootElement(localName = "Meta")
+@JsonInclude(JsonInclude.Include.NON_NULL) // Only include non-null attributes in the generated XML
+data class MetaRequest(
+    @JacksonXmlProperty(isAttribute = true, localName = "mc")
+    var mc: String? = null, // Manufacturer Cert
+
+    @JacksonXmlProperty(isAttribute = true, localName = "dpId")
+    var dpId: String? = null, // Device Provider ID
+
+    @JacksonXmlProperty(isAttribute = true, localName = "rdsId")
+    var rdsId: String? = null, // RD Service ID
+
+    @JacksonXmlProperty(isAttribute = true, localName = "mi")
+    var mi: String? = null, // Manufacturer ID
+
+    @JacksonXmlProperty(isAttribute = true, localName = "rdsVer")
+    var rdsVer: String? = null, // RD Service Version
+
+    @JacksonXmlProperty(isAttribute = true, localName = "dc")
+    var dc: String? = null // Device Code
+)
+
+
+
+skey
+// app/src/main/java/in/gov.uidai.auasample.input.contract/SkeyRequest.kt
+package in.gov.uidai.auasample.input.contract
+
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement
+
+@JacksonXmlRootElement(localName = "Skey")
+@JsonInclude(JsonInclude.Include.NON_NULL)
+data class SkeyRequest(
+    @JacksonXmlProperty(isAttribute = true, localName = "ci")
+    var ci: String? = null,
+
+    @JacksonXmlText
+    var value: String? = null
+)
+
+
+data
+
+
+// app/src/main/java/in.gov.uidai.auasample.input.contract/DataRequest.kt
+package in.gov.uidai.auasample.input.contract
+
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement
+
+@JacksonXmlRootElement(localName = "Data")
+@JsonInclude(JsonInclude.Include.NON_NULL)
+data class DataRequest(
+    @JacksonXmlProperty(isAttribute = true, localName = "type")
+    var type: String? = null,
+
+    @JacksonXmlText
+    var value: String? = null
+)
+
