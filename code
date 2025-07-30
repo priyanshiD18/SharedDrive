@@ -1,0 +1,47 @@
+// app/src/main/java/com/example/aadhaardemo/models/AuthResponseModels.kt
+package in.gov.uidai.auasample.model.auth_resp_decoded // Keep original package structure if desired for consistency
+
+import com.thoughtworks.xstream.annotations.XStreamAlias
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute
+
+@XStreamAlias("AuthRes")
+data class AuthRes(
+    @XStreamAsAttribute
+    var ret: String? = null, // "Y" for success, "N" for failure
+    @XStreamAsAttribute
+    var code: String? = null, // Authentication code (often null/empty for success)
+    @XStreamAsAttribute
+    var err: String? = null, // Error code (if ret="N")
+    // Note: Signature is a complex element, usually represented by another class.
+    // If 'Signature' is meant to be the full XML Signature element, it should be
+    // another data class. If it's just a reference/placeholder, string might suffice.
+    // Assuming it's a nested XML element for now.
+    @XStreamAlias("Signature")
+    var signature: Signature? = null, // Assuming Signature is another XStream-mapped class
+    @XStreamAsAttribute
+    var txn: String? = null, // Transaction ID
+    @XStreamAsAttribute
+    var info: String? = null, // Additional info (e.g., sub-AUA)
+    @XStreamAsAttribute
+    var ts: String? = null // Timestamp
+)
+
+
+
+
+import com.thoughtworks.xstream.XStream
+
+// To deserialize XML to AuthRes object:
+val xstream = XStream()
+xstream.processAnnotations(AuthRes::class.java) // Register your data class for annotation processing
+xstream.processAnnotations(Signature::class.java) // Register other nested classes too
+val authRes: AuthRes = xstream.fromXML(xmlString) as AuthRes
+
+// To serialize AuthRes object to XML:
+val xmlString: String = xstream.toXML(authRes)
+
+
+
+
+
+implementation("com.thoughtworks.xstream:xstream:1.4.20") // Or the latest stable version
