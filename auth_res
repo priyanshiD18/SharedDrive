@@ -1,0 +1,218 @@
+// app/src/main/java/in/gov/uidai/auasample/model/auth_resp_decoded/AuthRes.kt
+package in.gov.uidai.auasample.model.auth_resp_decoded
+
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement
+
+@JacksonXmlRootElement(localName = "AuthRes")
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class AuthRes(
+    @JacksonXmlProperty(isAttribute = true, localName = "ret")
+    var ret: String? = null,
+
+    @JacksonXmlProperty(isAttribute = true, localName = "code")
+    var code: String? = null,
+
+    @JacksonXmlProperty(isAttribute = true, localName = "err")
+    var err: String? = null,
+
+    @JacksonXmlProperty(isAttribute = true, localName = "txn")
+    var txn: String? = null,
+
+    @JacksonXmlProperty(isAttribute = true, localName = "info")
+    var info: String? = null,
+
+    @JacksonXmlProperty(isAttribute = true, localName = "ts")
+    var ts: String? = null,
+
+    @JsonProperty("Signature")
+    var signature: SignatureResponse? = null
+)
+
+
+
+
+
+
+signature
+
+
+
+
+// app/src/main/java/in/gov/uidai/auasample/model/auth_resp_decoded/SignatureResponse.kt
+package in.gov.uidai.auasample.model.auth_resp_decoded
+
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+
+@JacksonXmlRootElement(localName = "Signature")
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class SignatureResponse(
+    @JacksonXmlProperty(isAttribute = true, localName = "xmlns")
+    var xmlns: String? = null,
+
+    @JsonProperty("SignatureValue")
+    var signatureValue: String? = null,
+
+    @JsonProperty("SignedInfo")
+    var signedInfo: SignedInfoResponse? = null
+)
+
+
+
+
+
+signedInfo
+
+
+
+// app/src/main/java/in/gov/uidai/auasample/model/auth_resp_decoded/SignedInfoResponse.kt
+package in.gov.uidai.auasample.model.auth_resp_decoded
+
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+
+@JacksonXmlRootElement(localName = "SignedInfo")
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class SignedInfoResponse(
+    @JsonProperty("Reference")
+    var reference: ReferenceResponse? = null,
+
+    @JsonProperty("CanonicalizationMethod")
+    var canonicalizationMethod: CanonicalizationMethodResponse? = null,
+
+    @JsonProperty("SignatureMethod")
+    var signatureMethod: SignatureMethodResponse? = null
+)
+
+
+
+
+
+reference 
+
+
+// app/src/main/java/in/gov/uidai/auasample/model/auth_resp_decoded/ReferenceResponse.kt
+package in.gov.uidai.auasample.model.auth_resp_decoded
+
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+
+@JacksonXmlRootElement(localName = "Reference")
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class ReferenceResponse(
+    @JsonProperty("Transforms")
+    var transforms: TransformsResponse? = null,
+
+    @JsonProperty("DigestMethod")
+    var digestMethod: DigestMethodResponse? = null,
+
+    @JsonProperty("DigestValue")
+    var digestValue: String? = null,
+
+    @JacksonXmlProperty(isAttribute = true, localName = "URI")
+    var uri: String? = null
+)
+
+
+
+
+canonicalization method 
+
+
+// app/src/main/java/in/gov/uidai/auasample/model/auth_resp_decoded/CanonicalizationMethodResponse.kt
+package in.gov.uidai.auasample.model.auth_resp_decoded
+
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+
+@JacksonXmlRootElement(localName = "CanonicalizationMethod")
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class CanonicalizationMethodResponse(
+    @JacksonXmlProperty(isAttribute = true, localName = "Algorithm")
+    var algorithm: String? = null
+)
+
+
+
+
+signature method 
+
+// app/src/main/java/in/gov/uidai/auasample/model/auth_resp_decoded/SignatureMethodResponse.kt
+package in.gov.uidai.auasample.model.auth_resp_decoded
+
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+
+@JacksonXmlRootElement(localName = "SignatureMethod")
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class SignatureMethodResponse(
+    @JacksonXmlProperty(isAttribute = true, localName = "Algorithm")
+    var algorithm: String? = null
+)
+
+
+
+transforms
+
+// app/src/main/java/in/gov/uidai/auasample/model/auth_resp_decoded/TransformsResponse.kt
+package in.gov.uidai.auasample.model.auth_resp_decoded
+
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+
+@JacksonXmlRootElement(localName = "Transforms")
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class TransformsResponse(
+    @JsonProperty("Transform")
+    var transform: TransformResponse? = null // Assuming Transform is another nested data class
+)
+
+
+
+transform 
+
+
+// app/src/main/java/in/gov/uidai/auasample/model/auth_resp_decoded/TransformResponse.kt
+package in.gov.uidai.auasample.model.auth_resp_decoded
+
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+
+@JacksonXmlRootElement(localName = "Transform")
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class TransformResponse(
+    @JacksonXmlProperty(isAttribute = true, localName = "Algorithm")
+    var algorithm: String? = null
+)
+
+
+
+
