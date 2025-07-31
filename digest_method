@@ -1,0 +1,15 @@
+// app/src/main/java/in/gov/uidai.auasample.model.auth_resp_decoded/DigestMethodResponse.kt
+package in.gov.uidai.auasample.model.auth_resp_decoded
+
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+
+@JacksonXmlRootElement(localName = "DigestMethod")
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class DigestMethodResponse(
+    @JacksonXmlProperty(isAttribute = true, localName = "Algorithm")
+    var algorithm: String? = null
+)
