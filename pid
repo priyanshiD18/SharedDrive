@@ -1,0 +1,240 @@
+pid data 
+
+
+// app/src/main/java/in/gov/uidai.auasample.model.piddata_pojo/PidDataRequest.kt
+package in.gov.uidai.auasample.model.piddata_pojo
+
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+
+@JacksonXmlRootElement(localName = "PidData") // Assumed root element name for this part of the XML
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class PidDataRequest(
+    @JsonProperty("Hmac")
+    var hmac: String? = null, // This HMAC is typically calculated over the UNENCRYPTED PidData XML
+
+    @JsonProperty("Resp")
+    var resp: RespRequest? = null, // Nested response-like info within PID (unusual for standard request)
+
+    @JsonProperty("DeviceInfo")
+    var deviceInfo: DeviceInfoRequest? = null,
+
+    @JsonProperty("Data") // This will map to the Data class from piddata_pojo
+    var data: DataPidPojoRequest? = null, // Renamed to avoid clash with input.contract.DataRequest
+
+    @JsonProperty("Skey") // This will map to the Skey class from piddata_pojo
+    var skey: SkeyPidPojoRequest? = null, // Renamed to avoid clash with input.contract.SkeyRequest
+
+    @JsonProperty("CustOpts")
+    var custOpts: CustOptsRequest? = null
+)
+
+
+data 
+
+
+// app/src/main/java/in.gov.uidai.auasample.model.piddata_pojo/DataPidPojoRequest.kt
+package in.gov.uidai.auasample.model.piddata_pojo
+
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+
+@JacksonXmlRootElement(localName = "Data")
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class DataPidPojoRequest(
+    @JacksonXmlProperty(isAttribute = true, localName = "type")
+    var type: String? = null,
+
+    @JacksonXmlText
+    var content: String? = null
+)
+
+
+
+
+skey
+
+// app/src/main/java/in.gov.uidai.auasample.model.piddata_pojo/SkeyPidPojoRequest.kt
+package in.gov.uidai.auasample.model.piddata_pojo
+
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+
+/**
+ * Kotlin data class representing the <Skey> element within the UNENCRYPTED PidData.
+ * This is different from the SkeyRequest.kt (from input.contract) which holds the encrypted session key.
+ */
+@JacksonXmlRootElement(localName = "Skey")
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true) // In case the XML has other attributes/elements
+data class SkeyPidPojoRequest(
+    @JacksonXmlProperty(isAttribute = true, localName = "ci")
+    var ci: String? = null, // Certificate Identifier
+
+    @JacksonXmlText // This maps the 'content' field to the direct text content of the <Skey> element
+    var content: String? = null // Unencrypted session key content
+)
+
+
+
+
+
+resp 
+
+
+// app/src/main/java/in.gov.uidai.auasample.model.piddata_pojo/RespRequest.kt
+package in.gov.uidai.auasample.model.piddata_pojo
+
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+
+/**
+ * Kotlin data class representing the <Resp> element within the UNENCRYPTED PidData.
+ * Contains response/quality-related information.
+ */
+@JacksonXmlRootElement(localName = "Resp")
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true) // In case the XML has other attributes/elements
+data class RespRequest(
+    @JacksonXmlProperty(isAttribute = true, localName = "qScore")
+    var qScore: String? = null, // Quality score
+
+    @JacksonXmlProperty(isAttribute = true, localName = "errInfo")
+    var errInfo: String? = null, // Error information
+
+    @JacksonXmlProperty(isAttribute = true, localName = "fType")
+    var fType: String? = null, // Feature type (e.g., finger type)
+
+    @JacksonXmlProperty(isAttribute = true, localName = "errorCode")
+    var errorCode: String? = null, // Error code
+
+    @JacksonXmlProperty(isAttribute = true, localName = "iCount")
+    var iCount: String? = null, // Iris count
+
+    @JacksonXmlProperty(isAttribute = true, localName = "pType")
+    var pType: String? = null, // Primary type
+
+    @JacksonXmlProperty(isAttribute = true, localName = "fCount")
+    var fCount: String? = null, // Finger count
+
+    @JacksonXmlProperty(isAttribute = true, localName = "nPoints")
+    var nPoints: String? = null, // Number of points
+
+    @JacksonXmlProperty(isAttribute = true, localName = "iType")
+    var iType: String? = null, // Iris type
+
+    @JacksonXmlProperty(isAttribute = true, localName = "pCount")
+    var pCount: String? = null // Primary count
+)
+
+
+
+device info 
+
+
+// app/src/main/java/in.gov.uidai.auasample.model.piddata_pojo/DeviceInfoRequest.kt
+package in.gov.uidai.auasample.model.piddata_pojo
+
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+
+/**
+ * Kotlin data class representing the <DeviceInfo> element within the UNENCRYPTED PidData.
+ * Contains information about the biometric device.
+ */
+@JacksonXmlRootElement(localName = "DeviceInfo")
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true) // In case the XML has other attributes/elements
+data class DeviceInfoRequest(
+    @JacksonXmlProperty(isAttribute = true, localName = "Additional_Info")
+    var additionalInfo: String? = null, // Additional device information
+
+    @JacksonXmlProperty(isAttribute = true, localName = "mc")
+    var mc: String? = null, // Manufacturer Cert
+
+    @JacksonXmlProperty(isAttribute = true, localName = "dpId")
+    var dpId: String? = null, // Device Provider ID
+
+    @JacksonXmlProperty(isAttribute = true, localName = "rdsId")
+    var rdsId: String? = null, // RD Service ID
+
+    @JacksonXmlProperty(isAttribute = true, localName = "mi")
+    var mi: String? = null, // Manufacturer ID
+
+    @JacksonXmlProperty(isAttribute = true, localName = "rdsVer")
+    var rdsVer: String? = null, // RD Service Version
+
+    @JacksonXmlProperty(isAttribute = true, localName = "dc")
+    var dc: String? = null // Device Code
+)
+
+
+
+
+custoptreq
+
+
+// app/src/main/java/in.gov.uidai.auasample.model.piddata_pojo/CustOptsRequest.kt
+package in.gov.uidai.auasample.model.piddata_pojo
+
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+
+/**
+ * Kotlin data class representing the <CustOpts> element within the UNENCRYPTED PidData.
+ * Contains a list of custom parameters.
+ */
+@JacksonXmlRootElement(localName = "CustOpts")
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class CustOptsRequest(
+    // JacksonXmlElementWrapper(useWrapping = false) means that the list items (Param)
+    // will be direct children of <CustOpts> without an intermediate wrapper element for the list itself.
+    // The @JsonProperty("Param") then specifies the element name for each item in the list.
+    @JacksonXmlElementWrapper(useWrapping = false)
+    @JsonProperty("Param")
+    var param: List<ParamRequest>? = null // List of custom parameters
+)
+
+
+
+param 
+
+// app/src/main/java/in.gov.uidai.auasample.model.piddata_pojo/ParamRequest.kt
+package in.gov.uidai.auasample.model.piddata_pojo
+
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+
+/**
+ * Kotlin data class representing a <Param> element within <CustOpts> in the UNENCRYPTED PidData.
+ */
+@JacksonXmlRootElement(localName = "Param")
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true) // In case the XML has other attributes/elements
+data class ParamRequest(
+    @JacksonXmlProperty(isAttribute = true, localName = "name")
+    var name: String? = null, // Name of the parameter
+
+    @JacksonXmlProperty(isAttribute = true, localName = "value")
+    var value: String? = null // Value of the parameter
+)
