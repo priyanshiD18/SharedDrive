@@ -1,0 +1,76 @@
+// app/src/main/java/in.gov.uidai.auasample.network/VolleyRestApi.kt
+package in.gov.uidai.auasample.network
+
+import android.content.Context
+import android.util.Log
+import com.android.volley.DefaultRetryPolicy
+import com.android.volley.Request
+import com.android.volley.RequestQueue
+import com.android.volley.VolleyError
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import java.io.UnsupportedEncodingException
+
+class VolleyRestApi(private val context: Context) {
+
+    private val requestQueue: RequestQueue by lazy {
+        Volley.newRequestQueue(context.applicationContext)
+    }
+
+    private val TAG = "VolleyRestApi"
+
+    suspend fun volleyWebService(url: String, xmlData: String): String {
+        Log.i(TAG, "Request to URL: $url")
+        Log.i(TAG, "XML Data: $xmlData")
+
+        return suspendCancellableCoroutine { continuation ->
+            val stringRequest = object : StringRequest(Method.POST, url,
+                { response ->
+                    Log.i(TAG, "Response from server: $response")
+                    if (response.toString().equals("null", ignoreCase = true)) {
+                        continuation.resumeWithException(VolleyError("Server returned 'null' response."))
+                    } else {
+                        continuation.resume(response)
+                    }
+                },
+                { error ->
+                    Log.e(TAG, "Volley Error: ${error.message}", error)
+                    continuation.resumeWithException(error)
+                }) {
+
+                override fun getBodyContentType(): String {
+                    return "application/xml; charset=${paramsEncoding}"
+                }
+
+                override fun getBody(): ByteArray? {
+                    return try {
+                        if (xmlData.isNullOrEmpty()) null else xmlData.toByteArray(charset(paramsEncoding))
+                    } catch (uee: UnsupportedEncodingException) {
+                        Log.e(TAG, "Unsupported Encoding Exception", uee)
+                        null
+                    }
+                }
+
+                override fun getRetryPolicy(): DefaultRetryPolicy {
+                    return DefaultRetryPolicy(
+                        20000,
+                        DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                        DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+                    )
+                }
+
+                private val paramsEncoding: String
+                    get() = "UTF-8"
+            }
+
+            requestQueue.add(stringRequest)
+
+            continuation.invokeOnCancellation {
+                stringRequest.cancel()
+            }
+        }
+    }
+}
